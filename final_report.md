@@ -1,4 +1,4 @@
-**Advanced Lane Finding Project**
+# **Advanced Lane Finding Project**
 
 [//]: # (Image References)
 
@@ -8,6 +8,8 @@
 [sliding_window]: ./output_images/sliding_window.png "sliding_window"
 [concise]: ./output_images/concise.png "concise"
 [drawlane.png]: ./output_images/drawlane.png "drawlane"
+
+---
 
 ### Submission files/ Writeup
 
