@@ -77,7 +77,6 @@ Finally, fits a 2-degree polynomial and returns this new fit.
 The output from both these methods are shown are here:
 
 ![sliding_window][sliding_window]
-
 ![concise][concise]
 
 
@@ -103,8 +102,7 @@ The funnction `process_image` cell: [38] can said to be the pipeline for process
 
 I first test the pipeline on some images here:
 
-![process_image][process_image]
-![curves][curves]
+![process_image][process_image]  ![curves][curves]
 
 You can see that the radius of curvature is very large for the straight roads and it changes for the curved roads. As expected, the radius of curvature is in the range (500m - 1000m) for the curves.
 
