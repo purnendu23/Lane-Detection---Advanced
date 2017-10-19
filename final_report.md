@@ -110,6 +110,4 @@ There are two main scenarios in which this method will fail:
 
 2. **Sharp Turns**: This might be a problem as well as we have not really checked for this and also the second method of identifying lanes from the previous polynomial-fit will fail more often and therefore sliding window method may need to be used more often.
 
-3. **Radius of curvature**: We also need a more accurate calculation approach for this because the car has to turn in accordance to this.
-
 
