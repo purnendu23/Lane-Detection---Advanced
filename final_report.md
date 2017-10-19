@@ -8,6 +8,8 @@
 [sliding_window]: ./output_images/sliding_window.png "sliding_window"
 [concise]: ./output_images/concise.png "concise"
 [drawlane]: ./output_images/drawlane.png "drawlane"
+[process_image]: ./output_images/process_image.png "process_image"
+[curves]: ./output_images/curves.png "curves"
 
 ### Submission files/ Writeup
 
@@ -99,6 +101,13 @@ Here is the final [project video](https://github.com/purnendu23/Lane-Detection-A
 
 The funnction `process_image` cell: [38] can said to be the pipeline for processing each frame of the video. It brings together all the functions defined so far and puts appropriate conditions for use of each. 
 
+I first test the pipeline on some images here:
+
+![process_image][process_image]
+![curves][curves]
+
+You can see that the radius of curvature is very large for the straight roads and it changes for the curved roads. As expected, the radius of curvature is in the range (500m - 1000m) for the curves.
+
 ---
 
 ### Discussion
@@ -106,7 +115,7 @@ The funnction `process_image` cell: [38] can said to be the pipeline for process
 ##### 1. Problems / issues faced.  Where will the pipeline likely fail?  What could be done to make it more robust?
 
 There are two main scenarios in which this method will fail:
-1. **Abnormal lighting**: This can occur because of glare from the sun or shadow from the surroundings(trees, bigger vehicles, roadside infrastucture, etc). This can be solved by trying out better color thresholds. This requires some more trial-n-error and playing around. This probelm can infact be observed towards the end of the project video when the car crosses the last tree and the shadow causses the lane line to distort.
+1. **Abnormal lighting**: This can occur because of glare from the sun or shadow from the surroundings(trees, bigger vehicles, roadside infrastucture, etc). This can be solved by trying out better color thresholds. This requires some more trial-n-error and playing around.
 
 2. **Sharp Turns**: This might be a problem as well as we have not really checked for this and also the second method of identifying lanes from the previous polynomial-fit will fail more often and therefore sliding window method may need to be used more often.
 
