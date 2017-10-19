@@ -9,8 +9,6 @@
 [concise]: ./output_images/concise.png "concise"
 [drawlane.png]: ./output_images/drawlane.png "drawlane"
 
----
-
 ### Submission files/ Writeup
 
 You're reading the writeup! and here is a link to my 
