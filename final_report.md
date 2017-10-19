@@ -55,7 +55,7 @@ I combine the binary images from both these functions in the following step:
 
 ##### 3. Perspective transform
 
-I use `cv2.getPerspectiveTransform` and `cv2.warpPerspective` inside the `warpImage` function in cell: [2] which returns the warped image. I use this function in cell: [8] to show example of undistortion:
+I use `cv2.getPerspectiveTransform` and `cv2.warpPerspective` inside the `warpImage` function in cell: [2] which returns the warped image. I use this function in cell: [8] to show example of transform:
 
 ![perspective][perspective]
 
