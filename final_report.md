@@ -45,10 +45,9 @@ I define `applyGradientThresh(image)` and `applyColorThresh(image)` to apply gra
 
 gives the gist of my gradient-threshold technique. 
 
-`combined[  ((s_binary == 1) & (h_binary == 1)) | (r_binary == 1) ] = 1`
+`combined[(color_filter == 1) & ( (s_binary == 1) | (h_binary == 1) | (r_binary == 1)) ] = 1`
 
-gives the gist of my color-threshold technique.
-Both the functions are defined in cell: [2]
+gives the gist of my color-threshold technique. Both the functions are defined in cell: [2]
 
 I combine the binary images from both these functions in the following step:
 
@@ -85,7 +84,9 @@ The output from both these methods are shown are here:
 The calculation of radius of curvature and the position of vehicle are done inside the `class Line` as member funtions:
 `self.set_dist_from_center()` and `self.calc_curvature()` in cell:[37].
 
-I use `self.best_fit` at that time to calculate the radius of curvature.
+For the radius of curvature calculation, I use the latest fit to get the x,y pixel coordinates. I factor in
+`ym_per_pix = 3.048/100` and  `xm_per_pix = 3.7/400` to get the x,y coordinates in the real world space. Finally, I fit a polynomial curve through these points and use that to calculate the radius of curvature for that line.
+The final reported radius is an average of the left and right lane-lines.
 
 ##### 6. Drawn lane on image
 The functions `draw_lane` draws the lane back to the original image. It is borrowed from the lesson# 36 (tips and tricks). (cell: [33]. Here is the output on a sample image:
