@@ -51,7 +51,7 @@ gives the gist of my color-threshold technique. Both the functions are defined i
 
 I combine the binary images from both these functions in the following step:
 
-`combined[ (t1 == 1) & (t2 == 1)  ] = 1`      where t1: gradient-binary,  t2: color-threshold
+`combined[ (t1 == 1) & (t2 == 1)  ] = 1`      where   t1: gradient-binary,   t2: color-binary
 
 
 ##### 3. Perspective transform
