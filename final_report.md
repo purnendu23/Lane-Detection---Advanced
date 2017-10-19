@@ -1,16 +1,11 @@
 **Advanced Lane Finding Project**
 
-
-
 [//]: # (Image References)
 
 [undistortion]: ./output_images/undistortion.png "undistortion"
-[image2]: ./test_images/test1.jpg "Road Transformed"
-[image3]: ./examples/binary_combo_example.jpg "Binary Example"
-[image4]: ./examples/warped_straight_lines.jpg "Warp Example"
-[image5]: ./examples/color_fit_lines.jpg "Fit Visual"
-[image6]: ./examples/example_output.jpg "Output"
-[video1]: ./project_video.mp4 "Video"
+[perspective]: ./output_images/perspective.png "perspective"
+
+
 
 ### Submission files/ Writeup
 
@@ -18,72 +13,63 @@ You're reading the writeup! and here is a link to my
 
 [project code](https://github.com/purnendu23/Lane-Detection-Advanced/blob/master/laneDetect.ipynb)
 
-### Camera Calibration
+### Camera Calibration and Undistortion
 
-I find the camera matrix `mtx` and distortion coeffecients `dist` using `calibrateCam`(cell: 2). I then use these values to find undistorted image by using `undistortImage` (cell: 2). The following figure shows the results of undistortion function used on an image:
-
-
-
-![undistortion][undistortion]
-
+I find the camera matrix `mtx` and distortion coeffecients `dist` using `calibrateCam`(cell: 2). I then use these values to find undistorted image by using `undistortImage` (cell: 2). 
 ### Pipeline (single images)
+
+My pipeline consists of the following steps:
+1. Undistortion
+2. Applying Gradient Threshold
+3. Applying Color Threshold
+4. Combining thresholds
+5. Perspective transform to get top-down view
 
 #### 1. Provide an example of a distortion-corrected image.
 
-To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
-![alt text][image2]
+The following figure shows the results of undistortion function used on an image: (refer Cell: [7])
+
+![undistortion][undistortion]
+
 
 #### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+I define `applyGradientThresh(image)` and `applyColorThresh(image)` to apply gradient and color thresholds to the image.
 
-![alt text][image3]
+`combined[((gradx == 1) & (grady == 1)) | ((mag_binary == 1) & (dir_binary == 1))] = 1`
 
-#### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
+gives the gist of my gradient-threshold technique. 
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
+`combined[  ((s_binary == 1) & (h_binary == 1)) | (r_binary == 1) ] = 1`
 
-```python
-src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
-    [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
-dst = np.float32(
-    [[(img_size[0] / 4), 0],
-    [(img_size[0] / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), 0]])
-```
+gives the gist of my color-threshold technique.
+Both the functions are defined in cell: [2]
 
-This resulted in the following source and destination points:
+I combine the binary images from both these functions in the following step:
 
-| Source        | Destination   | 
-|:-------------:|:-------------:| 
-| 585, 460      | 320, 0        | 
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
+`combined[ (t1 == 1) & (t2 == 1)  ] = 1`      where t1: gradient-binary,  t2: color-threshold
 
-I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
-![alt text][image4]
+#### 3. Perspective transform
+
+I use `cv2.getPerspectiveTransform` and `cv2.warpPerspective` inside the `warpImage` function in cell: [2] which returns the warped image. I use this function in cell: [8] to show example of undistortion:
+
+![perspective][perspective]
 
 #### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
 
 Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
 
-![alt text][image5]
 
-#### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
+
+#### 5. Radius of curvature of the lane and the position of the vehicle with respect to center.
 
 I did this in lines # through # in my code in `my_other_file.py`
 
-#### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
-
+#### 6. Drawn lane on image
 I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
 
-![alt text][image6]
+
 
 ---
 
