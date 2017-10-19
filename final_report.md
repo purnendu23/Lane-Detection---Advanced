@@ -1,16 +1,13 @@
-**Advanced Lane Finding Project**
-
-
+# **Advanced Lane Finding Project**
 
 [//]: # (Image References)
 
-[image1]: ./
-[image2]: ./test_images/test1.jpg "Road Transformed"
-[image3]: ./examples/binary_combo_example.jpg "Binary Example"
-[image4]: ./examples/warped_straight_lines.jpg "Warp Example"
-[image5]: ./examples/color_fit_lines.jpg "Fit Visual"
-[image6]: ./examples/example_output.jpg "Output"
-[video1]: ./project_video.mp4 "Video"
+[undistortion]: ./output_images/undistortion.png "undistortion"
+[perspective]: ./output_images/perspective.png "perspective"
+[Undistorted-Thresholded-Warped]: ./output_images/Undistorted-Thresholded-Warped.png "Undistorted-Thresholded-Warped"
+[sliding_window]: ./output_images/sliding_window.png "sliding_window"
+[concise]: ./output_images/concise.png "concise"
+[drawlane.png]: ./output_images/drawlane.png "drawlane"
 
 ### Submission files/ Writeup
 
@@ -18,79 +15,99 @@ You're reading the writeup! and here is a link to my
 
 [project code](https://github.com/purnendu23/Lane-Detection-Advanced/blob/master/laneDetect.ipynb)
 
-### Camera Calibration
+### Camera Calibration and Undistortion
 
-I find the camera matrix `mtx` and distortion coeffecients `dist` using `calibrateCam`(cell: 2). I then use these values to find undistorted image by using `undistortImage` (cell: 2). The following figure shows the results
-
-![alt text][image1]
-
+I find the camera matrix `mtx` and distortion coeffecients `dist` using `calibrateCam`(cell: 2). I then use these values to find undistorted image by using `undistortImage` (cell: 2). 
 ### Pipeline (single images)
 
-#### 1. Provide an example of a distortion-corrected image.
+My pipeline consists of the following steps:
+* Undistortion
+* Applying Gradient Threshold
+* Applying Color Threshold
+* Combining thresholds
+* Perspective transform to get top-down view
 
-To demonstrate this step, I will describe how I apply the distortion correction to one of the test images like this one:
-![alt text][image2]
 
-#### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
+##### 1. Provide an example of a distortion-corrected image.
 
-I used a combination of color and gradient thresholds to generate a binary image (thresholding steps at lines # through # in `another_file.py`).  Here's an example of my output for this step.  (note: this is not actually from one of the test images)
+The following figure shows the results of undistortion function used on an image: (refer Cell: [7])
 
-![alt text][image3]
+![undistortion][undistortion]
 
-#### 3. Describe how (and identify where in your code) you performed a perspective transform and provide an example of a transformed image.
 
-The code for my perspective transform includes a function called `warper()`, which appears in lines 1 through 8 in the file `example.py` (output_images/examples/example.py) (or, for example, in the 3rd code cell of the IPython notebook).  The `warper()` function takes as inputs an image (`img`), as well as source (`src`) and destination (`dst`) points.  I chose the hardcode the source and destination points in the following manner:
+##### 2. Describe how (and identify where in your code) you used color transforms, gradients or other methods to create a thresholded binary image.  Provide an example of a binary image result.
 
-```python
-src = np.float32(
-    [[(img_size[0] / 2) - 55, img_size[1] / 2 + 100],
-    [((img_size[0] / 6) - 10), img_size[1]],
-    [(img_size[0] * 5 / 6) + 60, img_size[1]],
-    [(img_size[0] / 2 + 55), img_size[1] / 2 + 100]])
-dst = np.float32(
-    [[(img_size[0] / 4), 0],
-    [(img_size[0] / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), img_size[1]],
-    [(img_size[0] * 3 / 4), 0]])
-```
+I define `applyGradientThresh(image)` and `applyColorThresh(image)` to apply gradient and color thresholds to the image.
 
-This resulted in the following source and destination points:
+`combined[((gradx == 1) & (grady == 1)) | ((mag_binary == 1) & (dir_binary == 1))] = 1`
 
-| Source        | Destination   | 
-|:-------------:|:-------------:| 
-| 585, 460      | 320, 0        | 
-| 203, 720      | 320, 720      |
-| 1127, 720     | 960, 720      |
-| 695, 460      | 960, 0        |
+gives the gist of my gradient-threshold technique. 
 
-I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
+`combined[  ((s_binary == 1) & (h_binary == 1)) | (r_binary == 1) ] = 1`
 
-![alt text][image4]
+gives the gist of my color-threshold technique.
+Both the functions are defined in cell: [2]
 
-#### 4. Describe how (and identify where in your code) you identified lane-line pixels and fit their positions with a polynomial?
+I combine the binary images from both these functions in the following step:
 
-Then I did some other stuff and fit my lane lines with a 2nd order polynomial kinda like this:
+`combined[ (t1 == 1) & (t2 == 1)  ] = 1`      where t1: gradient-binary,  t2: color-threshold
 
-![alt text][image5]
 
-#### 5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
+##### 3. Perspective transform
 
-I did this in lines # through # in my code in `my_other_file.py`
+I use `cv2.getPerspectiveTransform` and `cv2.warpPerspective` inside the `warpImage` function in cell: [2] which returns the warped image. I use this function in cell: [8] to show example of undistortion:
 
-#### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+![perspective][perspective]
 
-I implemented this step in lines # through # in my code in `yet_another_file.py` in the function `map_lane()`.  Here is an example of my result on a test image:
+I test the pipeline on all test images to get Undistorted-Thresholded-Warped image as output of the pipeline. The following figure shows this:
 
-![alt text][image6]
+![Undistorted-Thresholded-Warped.png][Undistorted-Thresholded-Warped]
+
+
+##### 4. Identifying lane-line pixels and polynomial-fit
+
+The next step is to feed this binary(Undistorted-Thresholded-Warped) image to a function which identifies lane-line pixels and returns a second degree polynomial fit for each side of the lane (left line and right line).
+I have defined two functions for this:
+
+`identifyLanes_slidingWindow` cell: [15] and `identifyLanes_concise` cell: [28]. The former uses sliding window approach to identify the lane points, where as the latter uses a previous polynomial- fit from the last image to find x-coordinates of points in the vicinity of new (to-be-found) polynomial fit. It then puts the `nonzero()` condition left and right line pixels.
+Finally, fits a 2-degree polynomial and returns this new fit.
+
+The output from both these methods are shown are here:
+
+![sliding_window][sliding_window]
+
+![concise][concise]
+
+
+##### 5. Radius of curvature of the lane and the position of the vehicle with respect to center.
+
+The calculation of radius of curvature and the position of vehicle are done inside the `class Line` as member funtions:
+`self.set_dist_from_center()` and `self.calc_curvature()` in cell:[37].
+
+I use `self.best_fit` at that time to calculate the radius of curvature.
+
+##### 6. Drawn lane on image
+The functions `draw_lane` draws the lane back to the original image. It is borrowed from the lesson# 36 (tips and tricks). (cell: [33]. Here is the output on a sample image:
+
+![drawlane][drawlane]
 
 ---
 
 ### Pipeline (video)
 
+Here is the final [project video](https://github.com/purnendu23/Lane-Detection-Advanced/blob/master/project_video_output.mp4)
 
 ---
 
 ### Discussion
 
-#### 1. Problems / issues faced.  Where will your pipeline likely fail?  What could you do to make it more robust?
+##### 1. Problems / issues faced.  Where will the pipeline likely fail?  What could be done to make it more robust?
+
+There are two main scenarios in which this method will fail:
+1. **Abnormal lighting**: This can occur because of glare from the sun or shadow from the surroundings(trees, bigger vehicles, roadside infrastucture, etc). This can be solved by trying out better color thresholds. This requires some more trial-n-error and playing around. This probelm can infact be observed towards the end of the project video when the car crosses the last tree and the shadow causses the lane line to distort.
+
+2. **Sharp Turns**: This might be a problem as well as we have not really checked for this and also the second method of identifying lanes from the previous polynomial-fit will fail more often and therefore sliding window method may need to be used more often.
+
+3. **Radius of curvature**: We also need a more accurate calculation approach for this because the car has to turn in accordance to this.
+
 
