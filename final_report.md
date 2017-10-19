@@ -97,6 +97,8 @@ The functions `draw_lane` draws the lane back to the original image. It is borro
 
 Here is the final [project video](https://github.com/purnendu23/Lane-Detection-Advanced/blob/master/project_video_output.mp4)
 
+The funnction `process_image` cell: [38] can said to be the pipeline for processing each frame of the video. It brings together all the functions defined so far and puts appropriate conditions for use of each. 
+
 ---
 
 ### Discussion
