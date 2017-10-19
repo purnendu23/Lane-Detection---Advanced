@@ -4,7 +4,7 @@
 
 [//]: # (Image References)
 
-[image1]: ./
+[undistortion]: ./output_images/undistortion.png "undistortion"
 [image2]: ./test_images/test1.jpg "Road Transformed"
 [image3]: ./examples/binary_combo_example.jpg "Binary Example"
 [image4]: ./examples/warped_straight_lines.jpg "Warp Example"
@@ -20,9 +20,11 @@ You're reading the writeup! and here is a link to my
 
 ### Camera Calibration
 
-I find the camera matrix `mtx` and distortion coeffecients `dist` using `calibrateCam`(cell: 2). I then use these values to find undistorted image by using `undistortImage` (cell: 2). The following figure shows the results
+I find the camera matrix `mtx` and distortion coeffecients `dist` using `calibrateCam`(cell: 2). I then use these values to find undistorted image by using `undistortImage` (cell: 2). The following figure shows the results of undistortion function used on an image:
 
-![alt text][image1]
+
+
+![undistortion][undistortion]
 
 ### Pipeline (single images)
 
