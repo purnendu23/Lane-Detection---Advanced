@@ -7,7 +7,7 @@
 [Undistorted-Thresholded-Warped]: ./output_images/Undistorted-Thresholded-Warped.png "Undistorted-Thresholded-Warped"
 [sliding_window]: ./output_images/sliding_window.png "sliding_window"
 [concise]: ./output_images/concise.png "concise"
-[drawlane.png]: ./output_images/drawlane.png "drawlane"
+[drawlane]: ./output_images/drawlane.png "drawlane"
 
 ### Submission files/ Writeup
 
